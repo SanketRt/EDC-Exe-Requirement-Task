@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,17 +13,18 @@
       --background-color: #000000;
       --text-color: #ffffff;
       --header-background: rgb(0, 0, 0);
-      --card-background: #000000;
+      --card-background: #c9c1c1;
       --card-hover-shadow: 0 8px 16px rgba(185, 175, 175, 0.848);
+      --hero-background: url('Background.jpg');
     }
 
     body.light-mode {
+      --background-color: #ffffff;
       --text-color: #000000;
       --header-background: #f0f0f0;
       --card-background: #ffffff;
       --card-hover-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-      background-size: cover; /* Ensure the background image covers the entire page */
-      background-position: center; /* Center the background image */
+      --hero-background: url('lightbg.jpg');
     }
 
     body {
@@ -30,8 +32,8 @@
       font-family: 'Helvetica Neue', Arial, sans-serif;
       color: var(--text-color);
       margin: 0;
-      padding-top: 60px; /* Adjusted for fixed header */
-      background-image: var(--background-color); /* Apply background image */
+      padding-top: 60px;
+      background-image: var(--background-color);
     }
 
     header {
@@ -45,7 +47,6 @@
 
     header a {
       color: var(--text-color);
-      text-shadow: 2px 2px 4px rgb(0, 0, 0);
       text-decoration: none;
       font-weight: bold;
       padding: 0 15px;
@@ -53,11 +54,10 @@
 
     header a:hover {
       color: #868080;
-      text-shadow: 2px 2px 4px rgb(0, 0, 0);
     }
 
     .hero {
-      background-image: url('Background.jpg');
+      background-image: var(--hero-background);
       background-size: cover;
       background-position: center;
       height: calc(100vh - 60px);
@@ -65,21 +65,7 @@
       justify-content: center;
       align-items: center;
       text-align: center;
-      color: #ffffff;
-      text-shadow: 2px 2px 4px rgb(0, 0, 0);
-      padding: 20px;
-    }
-    hero.light-mode{
-      background-image: url('lightbg.png');
-      background-size: cover;
-      background-position: center;
-      height: calc(100vh - 60px);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      color: #000000;
-      text-shadow: 2px 2px 4px rgb(255, 255, 255);
+      color: var(--text-color);
       padding: 20px;
     }
 
@@ -90,14 +76,10 @@
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
       transition: transform 0.3s ease;
     }
-    .hero img.light-mode {
-      width: 150px;
-      height: 150px;
-      border-radius: 50%;
-      box-shadow: 0 0 10px rgb(255, 255, 255);
-      transition: transform 0.3s ease;
-    }
 
+    .hero img.light-mode {
+      box-shadow: 0 0 10px rgb(255, 255, 255);
+    }
 
     .hero img:hover {
       transform: scale(1.1);
@@ -126,12 +108,11 @@
 
     #projects {
       background-color: var(--background-color);
-      color: #ededed;
     }
 
     .card {
       background-color: var(--card-background);
-      color: #f0f0f0;
+      color: #000000;
       border: none;
       border-radius: 10px;
       overflow: hidden;
@@ -144,9 +125,41 @@
       box-shadow: var(--card-hover-shadow);
     }
 
+    .carousel-item {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: transform 0.5s ease, opacity 0.5s ease;
+    }
+
+    .carousel .card {
+      width: 80%;
+      max-width: 300px;
+      height: 450px;
+    }
+
     .card-img-top {
-      height: 200px;
+      height: 250px;
       object-fit: cover;
+    }
+
+    .carousel-item-next,
+    .carousel-item-prev,
+    .carousel-item.active {
+      transform: translateX(0);
+      opacity: 1;
+    }
+
+    .carousel-item-next,
+    .carousel-item-prev {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+
+    .carousel-item-next.carousel-item-left,
+    .carousel-item-prev.carousel-item-right {
+      transform: translateX(0);
+      opacity: 1;
     }
 
     footer {
@@ -248,9 +261,9 @@
         font-size: 1rem;
       }
     }
-
   </style>
 </head>
+
 <body>
   <header>
     <div class="container-md text-center">
@@ -262,8 +275,6 @@
         <div class="col">
           <button id="theme-switcher" onclick="toggleTheme()">Switch Theme</button>
         </div>
-        <i class="fa-solid fa-xmark" onclick="closemenu()"></i>
-        <i class="fa-solid fa-bars" onclick="openmenu()"></i>
       </div>
     </div>
   </header>
@@ -277,7 +288,7 @@
       </div>
     </div>
   </section>
-  
+
   <!-- About Section -->
   <section id="about">
     <div class="container">
@@ -292,41 +303,50 @@
   <section id="projects">
     <div class="container">
       <h2 class="text-center mb-4">My Projects</h2>
-      <div class="row">
-        <!-- Project 1 -->
-        <div class="col-md-4 mb-4">
-          <div class="card">
-            <img src="Project1.jpeg" class="card-img-top" alt="Project 1">
-            <div class="card-body">
-              <h5 class="card-title">Power Generating Speed Breaker</h5>
-              <p class="card-text">MBD100 Project</p>
-              <a href="MBD100 Project.pdf" target="_blank" class="btn btn-primary">View Project</a>
+      <div id="projectCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          <!-- Project 1 -->
+          <div class="carousel-item active">
+            <div class="card">
+              <img src="Project1.jpeg" class="card-img-top" alt="Project 1">
+              <div class="card-body">
+                <h5 class="card-title">Power Generating Speed Breaker</h5>
+                <p class="card-text">MCP101 Project</p>
+                <a href="MCP101 PROJECT.pdf" target="_blank" class="btn btn-primary">View Project</a>
+              </div>
+            </div>
+          </div>
+          <!-- Project 2 -->
+          <div class="carousel-item">
+            <div class="card">
+              <img src="Project2.jpg" class="card-img-top" alt="Project 2">
+              <div class="card-body">
+                <h5 class="card-title">Biogas Conversion Kit For Diesel Engine</h5>
+                <p class="card-text">APL100 Project</p>
+                <a href="APL100 Project.pdf" target="_blank" class="btn btn-primary">View Project</a>
+              </div>
+            </div>
+          </div>
+          <!-- Project 3 -->
+          <div class="carousel-item">
+            <div class="card">
+              <img src="Project3.png" class="card-img-top" alt="Project 3">
+              <div class="card-body">
+                <h5 class="card-title">Waste-To-Wonder Program</h5>
+                <p class="card-text">NIN100 Project</p>
+                <a href="https://youtu.be/fJuByebwumo?si=eXZMfbD6YsTfTVyj" target="_blank" class="btn btn-primary">View Project</a>
+              </div>
             </div>
           </div>
         </div>
-        <!-- Project 2 -->
-        <div class="col-md-4 mb-4">
-          <div class="card">
-            <img src="Project2.jpg" class="card-img-top" alt="Project 2">
-            <div class="card-body">
-              <h5 class="card-title">Biogas Conversion Kit For Diesel Engine</h5>
-              <p class="card-text">APL100 Project</p>
-              <a href="APL100 Project.pdf" target="_blank" class="btn btn-primary">View Project</a>
-            </div>
-          </div>
-        </div>
-        <!-- Project 3 -->
-        <div class="col-md-4 mb-4">
-          <div class="card">
-            <img src="Project3.png" class="card-img-top" alt="Project 3">
-            <div class="card-body">
-              <h5 class="card-title">Waste-To-Wonder Program</h5>
-              <p class="card-text">NIN100 Project</p>
-              <a href="https://youtu.be/fJuByebwumo?si=eXZMfbD6YsTfTVyj" target="_blank" class="btn btn-primary">View Project</a>
-            </div>
-          </div>
-        </div>
-        <!-- Add more project cards as needed -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#projectCarousel" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#projectCarousel" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
       </div>
     </div>
   </section>
@@ -348,22 +368,7 @@
 
   <script src="js/bootstrap.js"></script>
   <script>
-    var tablinks = document.getElementsByClassName("tab-links");
-    var tabcontents = document.getElementsByClassName("tab-contents");
-    function opentab(tabname){
-        for(tablink of tablinks){
-            tablink.classList.remove("active-link")
-        }
-        for(tabcontent of tabcontents){
-            tabcontent.classList.remove("active-tab")
-        }
-        event.currentTarget.classList.add("active-link");
-        document.getElementById(tabname).classList.add("active-tab")
-    }
-  </script>
-  <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // Load the saved theme from localStorage
       const savedTheme = localStorage.getItem('theme') || 'dark-mode';
       document.body.classList.add(savedTheme);
     });
@@ -375,18 +380,9 @@
       document.body.classList.remove(currentTheme);
       document.body.classList.add(newTheme);
 
-      // Save the new theme in localStorage
       localStorage.setItem('theme', newTheme);
     }
   </script>
-  <script>
-    var sidemenu = document.getElementById("sidemenu");
-    function openmenu(){
-        sidemenu.style.right = "0";
-    }
-    function closemenu(){
-        sidemenu.style.right = "-200px";
-    }
-  </script>
 </body>
+
 </html>
